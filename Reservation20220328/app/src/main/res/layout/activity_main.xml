@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <!-- 첫 번재 LinearLayout 크로노미터위젯, 예약시작 버튼-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="5dp">
+
+        <Chronometer
+            android:id="@+id/chronometer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:format="예악에 걸린 시간 %s"
+            android:gravity="center"
+            android:textSize="25sp" />  <!-- 문자열로 출력 가능-->
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="예약 시작"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <!-- RadioGroup -->
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="5dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rdoCal"
+            android:text="날짜 설정(캘리더뷰)"
+            android:textSize="20sp"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rdoTime"
+            android:text="시간 설정(타임피커)"
+            android:textSize="20sp"/>
+
+    </RadioGroup>
+
+    <!-- FrameLayout을 위한 LinearLayout-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="5dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CalendarView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/calendarView1"
+                android:showWeekNumber="false"/> <!-- 1주, 2주 등 주차 표기를 안함-->
+
+            <TimePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/timePicker1"
+                android:timePickerMode="spinner"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- 아래 부분(예약 완료)을 위한 LinearLaydout-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnEnd"
+            android:text="예약 완료"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView1"
+            android:text="0000년00월00일00시00분에 예약됨."
+            android:textSize="17sp" />
+    </LinearLayout>
+    <!-- 1. Layout_weight 속성은 영역 활보 할 때 1:1:1:1 같은 비율로 높이를 나누어 가짐.-->
+    <!-- 2. 모든 넓이나 높이에서 wrap_content로 잡고 잡을 만큼 컨텐츠 크기만큼 너비(글자) 높이(한줄정도)
+            나머지 영역은 자신이 차지하겠다 -> Layout_weight =1은 그런 의미를 가짐-->
+</LinearLayout>

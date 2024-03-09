@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ac.baekseok.example.activity20220404">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Activity20220404">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SecondActivity">   <!-- 화면을 추가할 때마다 태그 추가 필요-->
+
+        </activity>
+        <activity android:name=".ThirdActivity">   <!-- 화면을 추가할 때마다 태그 추가 필요-->
+
+        </activity>
+        <activity android:name=".ForthActivity">   <!-- 화면을 추가할 때마다 태그 추가 필요-->
+
+        </activity>
+    </application>
+
+</manifest>
