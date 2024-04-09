@@ -1,2 +1,4 @@
 # Android Programming
 
+PULL REQUEST 1. OPEN
+PULL REQUEST 2. CLOSED
