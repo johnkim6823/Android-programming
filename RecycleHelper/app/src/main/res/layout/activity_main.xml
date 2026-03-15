@@ -57,7 +57,7 @@
             android:layout_marginLeft="5dp"
             android:textSize="20sp"
             android:hint="회원가입하신 PW로 로그인하세요"
-            android:password="true"/>
+            android:inputType="textPassword"/>
     </LinearLayout>
 
     <LinearLayout
