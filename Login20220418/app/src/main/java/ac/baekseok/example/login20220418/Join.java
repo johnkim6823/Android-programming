@@ -1,20 +1,19 @@
 package ac.baekseok.example.login20220418;
 
-import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class Join extends Activity {
+public class Join extends AppCompatActivity {
 
     EditText joinID, joinPW;
     Button btnJoinRegistration, btnJoingoMain;
@@ -22,11 +21,8 @@ public class Join extends Activity {
     myDBHelper myHelper;
     SQLiteDatabase sqlDB;
 
-    int IdFlag=0; //아이디 일치 1 아이디 일치 X 0
-    int PwFlag=0; //PW 일치 1    PW 일치 X
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join);
 
@@ -41,14 +37,22 @@ public class Join extends Activity {
         btnJoinRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //회원 등록
+                String id = joinID.getText().toString().trim();
+                String pw = joinPW.getText().toString().trim();
+
+                if (id.isEmpty() || pw.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "ID와 비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 sqlDB = myHelper.getWritableDatabase();
-                sqlDB.execSQL("INSERT INTO joinInfo VALUES('"+
-                        joinID.getText().toString()+"','"+
-                        joinPW.getText().toString()+"');");
+                ContentValues values = new ContentValues();
+                values.put("uID", id);
+                values.put("uPassword", pw);
+                sqlDB.insert("joinInfo", null, values);
 
                 sqlDB.close();
-                Toast.makeText(getApplicationContext(), joinID.getText().toString() + "님이 가입되었습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), id + "님이 가입되었습니다.", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -60,13 +64,12 @@ public class Join extends Activity {
             }
         });
 
-
     }//onCreate()
 
     public class myDBHelper extends SQLiteOpenHelper{
         public myDBHelper(Context context){
             super(context, "LoginDB", null, 1);
-        }//생성자로 DB생성, LoginDB생성
+        }
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {

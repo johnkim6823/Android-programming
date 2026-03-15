@@ -2,6 +2,7 @@ package ac.baekseok.example.girlgroup20220404;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,15 +37,22 @@ public class MainActivity extends AppCompatActivity {
         editCountResult = (EditText) findViewById(R.id.edtCountResult);
 
         myHelper = new myDBHelper(this);      //본 화면에 생성(MainActivity)
-        //클래스명으로 인스턴스 생성 = 생성자.
 
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String name = editName.getText().toString().trim();
+                String count = editCount.getText().toString().trim();
+                if (name.isEmpty() || count.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "그룹 이름과 인원수를 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 sqlDB = myHelper.getWritableDatabase();
-                sqlDB.execSQL("INSERT INTO groupTBL VALUES('" +
-                        editName.getText().toString()+"', "+
-                        editCount.getText().toString()+");");
+                ContentValues values = new ContentValues();
+                values.put("gName", name);
+                values.put("gNumber", Integer.parseInt(count));
+                sqlDB.insert("groupTBL", null, values);
 
                 sqlDB.close();
                 Toast.makeText(getApplicationContext(), "1건의 입력이 실행되었습니다.", Toast.LENGTH_LONG).show();
@@ -59,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 cursor= sqlDB.rawQuery("SELECT * FROM groupTBL", null);
 
                 String strNames = "그룹 이름\r\n--------------\r\n";
-                String strCounts = "그릅 인원\r\n--------------\r\n";
+                String strCounts = "그룹 인원\r\n--------------\r\n";
 
                 while(cursor.moveToNext()){
                     strNames += cursor.getString(0) + "\r\n";
@@ -76,12 +84,17 @@ public class MainActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sqlDB =myHelper.getReadableDatabase();
-                if(editName.getText().toString()!=""){
-                    sqlDB.execSQL("UPDATE groupTBL SET gNumber="
-                            + editCount.getText()+" WHERE gName='"
-                            + editName.getText().toString()+"';");
+                String name = editName.getText().toString().trim();
+                String count = editCount.getText().toString().trim();
+                if (name.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "수정할 그룹 이름을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                sqlDB = myHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("gNumber", count);
+                sqlDB.update("groupTBL", values, "gName = ?", new String[]{name});
 
                 sqlDB.close();
                 Toast.makeText(getApplicationContext(), "수정됨", Toast.LENGTH_LONG).show();
@@ -92,11 +105,15 @@ public class MainActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sqlDB = myHelper.getWritableDatabase();
-                if(editName.getText().toString()!=""){
-                    sqlDB.execSQL("DELETE FROM groupTBL WHERE gName = '"
-                            +editName.getText().toString()+"';");
+                String name = editName.getText().toString().trim();
+                if (name.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "삭제할 그룹 이름을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                sqlDB = myHelper.getWritableDatabase();
+                sqlDB.delete("groupTBL", "gName = ?", new String[]{name});
+
                 sqlDB.close();
                 Toast.makeText(getApplicationContext(), "삭제됨", Toast.LENGTH_LONG).show();
                 btnSelect.callOnClick();
@@ -121,13 +138,9 @@ public class MainActivity extends AppCompatActivity {
         public myDBHelper(Context context) {    //데이터베이스를 생성한다.
             super(context, "groupDB", null, 1);         //groupDB라는 DB 생성
         }//myDBHelper()
-        //myDBHelper가 SQLiteOpenHelper를 상속 받음. 2개의 필수 Method -> onCreate(), onUpgrade()
-        //onCreate(): 테이블 생성, onUpgrade(): 테이블 삭제 및 다시 생성하는 역활
-        //커서를 myDBHelper클래스에 두고 [Code] -> [override]
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {               //테이블 생성
-            //Query문도 Language 중 하나.  //DB 처리(query) -> 테이블 생성 | 문자열로 처리받음.
             sqLiteDatabase.execSQL("CREATE TABLE groupTBL(gName CHAR(20) PRIMARY KEY, gNumber INTEGER);");
         }
 
@@ -137,6 +150,5 @@ public class MainActivity extends AppCompatActivity {
             onCreate(sqLiteDatabase);
         }
 
-
-    }//myDBHelper(클래스에 클래스가 있다는 의미로 내부클래스라함.
+    }//myDBHelper
 }//MainActivity

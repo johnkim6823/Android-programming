@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
         calendarView1 = (CalendarView) findViewById(R.id.calendarView1);
         //타임픽커
         timePicker1 = (TimePicker) findViewById(R.id.timePicker1);
-        //텍스트뷰뷰
+        //텍스트뷰
        textView1 = (TextView)findViewById(R.id.textView1);
        //앱 실행되면 radioGroup,캘린더뷰와 타임피커는 invisible
         calendarView1.setVisibility(View.INVISIBLE);
         timePicker1.setVisibility(View.INVISIBLE);
 
-        btnStart.setOnClickListener(new View.OnClickListener() {        //예약에 거리는 시간 강조하기 위해 글자색 변경
+        btnStart.setOnClickListener(new View.OnClickListener() {        //예약에 걸리는 시간 강조하기 위해 글자색 변경
             @Override
             public void onClick(View view) {
                 chronometer.setTextColor(Color.RED);
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        rdoTime.setOnClickListener(new View.OnClickListener() {         //시간 선책 radioButton을 누르면
+        rdoTime.setOnClickListener(new View.OnClickListener() {         //시간 선택 radioButton을 누르면
             @Override
             public void onClick(View view) {
                 calendarView1.setVisibility(View.INVISIBLE);
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //캘린더뷰에서 날짜변경, 타임피커에서 시간 병경하고 btnEnd를 누르면 (예약완료버튼)을 누르면 타이머 정지 및 글자 파란색으로 지정
+        //캘린더뷰에서 날짜변경, 타임피커에서 시간 변경하고 btnEnd를 누르면 (예약완료버튼)을 누르면 타이머 정지 및 글자 파란색으로 지정
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,25 +98,26 @@ public class MainActivity extends AppCompatActivity {
                 chronometer.stop();
                 //글자 파란색으로
                 chronometer.setTextColor(Color.BLUE);
-                //글자 넣기
-                textView1.setText(Integer.toString(selectYear) + "년 " +
-                                    Integer.toString(selectMonth) + "월 " +
-                                    Integer.toString(selectDay) + "일 " +
-                                    Integer.toString(timePicker1.getCurrentHour()) + "시 " +
-                                    Integer.toString(timePicker1.getCurrentMinute()) + "분에 예약됨");
 
-                //날짜 선택을 하지 않아도 오늘을 초기값으로 갖기.   -> selectYear,Month,Day가 하나라도 1보다 작다면.
+                int hour = timePicker1.getHour();
+                int minute = timePicker1.getMinute();
+
+                //날짜 선택을 하지 않아도 오늘을 초기값으로 갖기
                 if(selectYear < 1 || selectMonth < 1 || selectDay < 1) {
-                    java.util.Calendar curDate=java.util.Calendar.getInstance();
-                    curDate.setTimeInMillis(calendarView1.getDate());//캘린더뷰에 가져오는 Method
+                    java.util.Calendar curDate = java.util.Calendar.getInstance();
+                    curDate.setTimeInMillis(calendarView1.getDate());
 
-                    textView1.setText(Integer.toString(curDate.get(Calendar.YEAR)) + "년 " +
-                            Integer.toString(curDate.get((Calendar.MONTH+1))) + "월 " +
-                            Integer.toString(curDate.get(Calendar.DAY_OF_MONTH)) + "일 " +
-                            Integer.toString(timePicker1.getCurrentHour()) + "시 " +
-                            Integer.toString(timePicker1.getCurrentMinute()) + "분에 예약됨");
+                    selectYear = curDate.get(Calendar.YEAR);
+                    selectMonth = curDate.get(Calendar.MONTH) + 1;
+                    selectDay = curDate.get(Calendar.DAY_OF_MONTH);
                 }
 
+                //글자 넣기
+                textView1.setText(selectYear + "년 " +
+                                selectMonth + "월 " +
+                                selectDay + "일 " +
+                                hour + "시 " +
+                                minute + "분에 예약됨");
             }
         });
 
